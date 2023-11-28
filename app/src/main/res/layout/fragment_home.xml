@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/background_color"
+    android:background="@color/about_bg4"
     tools:context=".ui.home.HomeFragment">
 
     <TextView
@@ -21,16 +21,16 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-<!--    <Button-->
-<!--        android:id="@+id/button"-->
-<!--        android:layout_width="wrap_content"-->
-<!--        android:layout_height="wrap_content"-->
-<!--        android:onClick="btnClick"-->
-<!--        android:text="Button"-->
-<!--        app:layout_constraintTop_toBottomOf="@+id/text_home"-->
-<!--        tools:layout_editor_absoluteX="165dp"-->
-<!--        tools:layout_editor_absoluteY="330dp"-->
-<!--        tools:ignore="MissingConstraints" />-->
+    <!--    <Button-->
+    <!--        android:id="@+id/button"-->
+    <!--        android:layout_width="wrap_content"-->
+    <!--        android:layout_height="wrap_content"-->
+    <!--        android:onClick="btnClick"-->
+    <!--        android:text="Button"-->
+    <!--        app:layout_constraintTop_toBottomOf="@+id/text_home"-->
+    <!--        tools:layout_editor_absoluteX="165dp"-->
+    <!--        tools:layout_editor_absoluteY="330dp"-->
+    <!--        tools:ignore="MissingConstraints" />-->
 
     <Spinner
         android:id="@+id/script_type"
@@ -43,7 +43,6 @@
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recycler"
         android:layout_width="match_parent"
-        android:padding="15dp"
         android:layout_height="match_parent"
         android:layout_weight="1">
     </androidx.recyclerview.widget.RecyclerView>

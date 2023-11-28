@@ -3,33 +3,23 @@ package com.linsheng.FATJS.ui.dashboard;
 import static com.linsheng.FATJS.config.GlobalVariableHolder.DEV_MODE;
 import static com.linsheng.FATJS.config.GlobalVariableHolder.PATH;
 import static com.linsheng.FATJS.config.GlobalVariableHolder.context;
-import static com.linsheng.FATJS.config.GlobalVariableHolder.tag;
 import static com.linsheng.FATJS.node.AccUtils.printLogMsg;
 
-import android.Manifest;
 import android.annotation.SuppressLint;
-import android.content.Context;
 import android.content.Intent;
-import android.content.pm.PackageManager;
-import android.graphics.Bitmap;
-import android.media.projection.MediaProjectionManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.Settings;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Switch;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
-import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 
@@ -39,16 +29,12 @@ import com.hjq.permissions.XXPermissions;
 import com.linsheng.FATJS.R;
 import com.linsheng.FATJS.activitys.FloatingButton;
 import com.linsheng.FATJS.activitys.FloatingWindow;
-import com.linsheng.FATJS.activitys.MainActivity;
 import com.linsheng.FATJS.config.GlobalVariableHolder;
 import com.linsheng.FATJS.config.WindowPermissionCheck;
 import com.linsheng.FATJS.databinding.FragmentDashboardBinding;
-import com.linsheng.FATJS.findColor.config.CaptureScreenService;
 import com.linsheng.FATJS.findColor.config.ScreenCaptureManager;
 import com.linsheng.FATJS.utils.FileUtils;
-import com.linsheng.FATJS.utils.StringUtils;
 
-import java.io.File;
 import java.util.List;
 
 public class DashboardFragment extends Fragment {
@@ -110,7 +96,9 @@ public class DashboardFragment extends Fragment {
             printLogMsg(directoryPath, 0);
             FileUtils.createDirectory(directoryPath);
             permission = FileUtils.writeToTxt(filePath, "test");
-        }catch (Exception e) {}
+//            FileUtils.deleteFile(filePath);
+        } catch (Exception e) {
+        }
 
         _storage = permission;
         switch_storage.setChecked(permission);
@@ -122,48 +110,51 @@ public class DashboardFragment extends Fragment {
             printLogMsg("SD卡读写权限未授予", 0);
         }
     }
+
     public void getStoragePermission() {
         // 获取权限
         XXPermissions.with(this)
-        //申请单个权限
-        .permission(Permission.MANAGE_EXTERNAL_STORAGE)
-        //申请多个权限
-        //.permission(Permission.READ_MEDIA_IMAGES)
-        //.permission(Permission.READ_MEDIA_VIDEO)
-        //.permission(Permission.READ_MEDIA_AUDIO)
-        //.permission(Permission.SYSTEM_ALERT_WINDOW)
-        // 设置权限请求拦截器（局部设置）
-        //.interceptor(new PermissionInterceptor())
-        // 设置不触发错误检测机制（局部设置）
-        //.unchecked()
-        .request(new OnPermissionCallback() {
-            @RequiresApi(api = Build.VERSION_CODES.O)
-            @Override
-            public void onGranted(@NonNull List<String> permissions, boolean allGranted) {
-                if (!allGranted) {
-                    switch_storage.setChecked(false);
-                    return;
-                }
-                _storage = true;
-                switch_storage.setChecked(true);
-                FileUtils.createDirectory(Environment.getExternalStorageDirectory() + PATH);
-                FileUtils.writeToTxt(
-                        Environment.getExternalStorageDirectory() + PATH + "version.txt",
-                        "test");
-            }
-            @Override
-            public void onDenied(@NonNull List<String> permissions, boolean doNotAskAgain) {
-                switch_storage.setChecked(false);
-                if (doNotAskAgain) {
-                    printLogMsg("被永久拒绝授权，请手动授予权限", 0);
-                    // 如果是被永久拒绝就跳转到应用权限系统设置页面
-                    //XXPermissions.startPermissionActivity(context, permissions);
-                } else {
-                    printLogMsg("获取权限失败", 0);
-                }
-            }
-        });
+                //申请单个权限
+                .permission(Permission.MANAGE_EXTERNAL_STORAGE)
+                //申请多个权限
+                //.permission(Permission.READ_MEDIA_IMAGES)
+                //.permission(Permission.READ_MEDIA_VIDEO)
+                //.permission(Permission.READ_MEDIA_AUDIO)
+                //.permission(Permission.SYSTEM_ALERT_WINDOW)
+                // 设置权限请求拦截器（局部设置）
+                //.interceptor(new PermissionInterceptor())
+                // 设置不触发错误检测机制（局部设置）
+                //.unchecked()
+                .request(new OnPermissionCallback() {
+                    @RequiresApi(api = Build.VERSION_CODES.O)
+                    @Override
+                    public void onGranted(@NonNull List<String> permissions, boolean allGranted) {
+                        if (!allGranted) {
+                            switch_storage.setChecked(false);
+                            return;
+                        }
+                        _storage = true;
+                        switch_storage.setChecked(true);
+                        FileUtils.createDirectory(Environment.getExternalStorageDirectory() + PATH);
+                        FileUtils.writeToTxt(
+                                Environment.getExternalStorageDirectory() + PATH + "version.txt",
+                                "test");
+                    }
+
+                    @Override
+                    public void onDenied(@NonNull List<String> permissions, boolean doNotAskAgain) {
+                        switch_storage.setChecked(false);
+                        if (doNotAskAgain) {
+                            printLogMsg("被永久拒绝授权，请手动授予权限", 0);
+                            // 如果是被永久拒绝就跳转到应用权限系统设置页面
+                            //XXPermissions.startPermissionActivity(context, permissions);
+                        } else {
+                            printLogMsg("获取权限失败", 0);
+                        }
+                    }
+                });
     }
+
     private void floatPermission() {
         // 在其他应用上层显示
         boolean permission = WindowPermissionCheck.checkPermission(getActivity());
@@ -171,53 +162,56 @@ public class DashboardFragment extends Fragment {
         switch_float.setChecked(permission);
         if (permission) {
             printLogMsg("悬浮窗权限已授予", 0);
-        }else {
+        } else {
             // 权限尚未被授予，需要进行相应处理
             printLogMsg("悬浮窗权限未授予", 0);
         }
     }
+
     public void getFloatPermission() {
         // 获取权限
         XXPermissions.with(this)
-        //申请单个权限
-        //.permission(Permission.MANAGE_EXTERNAL_STORAGE)
-        //申请多个权限
-        //.permission(Permission.READ_MEDIA_IMAGES)
-        //.permission(Permission.READ_MEDIA_VIDEO)
-        //.permission(Permission.READ_MEDIA_AUDIO)
-        .permission(Permission.SYSTEM_ALERT_WINDOW)
-        // 设置权限请求拦截器（局部设置）
-        //.interceptor(new PermissionInterceptor())
-        // 设置不触发错误检测机制（局部设置）
-        //.unchecked()
-        .request(new OnPermissionCallback() {
-            @RequiresApi(api = Build.VERSION_CODES.O)
-            @Override
-            public void onGranted(@NonNull List<String> permissions, boolean allGranted) {
-                if (!allGranted) {
-                    switch_float.setChecked(false);
-                    return;
-                }
-                _float = true;
-                switch_float.setChecked(true);
-                // 打开悬浮窗
-                context.startService(new Intent(GlobalVariableHolder.context, FloatingWindow.class));
-                // 打开悬浮窗
-                context.startService(new Intent(GlobalVariableHolder.context, FloatingButton.class));
-            }
-            @Override
-            public void onDenied(@NonNull List<String> permissions, boolean doNotAskAgain) {
-                switch_float.setChecked(false);
-                if (doNotAskAgain) {
-                    printLogMsg("被永久拒绝授权，请手动授予权限", 0);
-                    // 如果是被永久拒绝就跳转到应用权限系统设置页面
-                    XXPermissions.startPermissionActivity(context, permissions);
-                } else {
-                    printLogMsg("获取权限失败", 0);
-                }
-            }
-        });
+                //申请单个权限
+                //.permission(Permission.MANAGE_EXTERNAL_STORAGE)
+                //申请多个权限
+                //.permission(Permission.READ_MEDIA_IMAGES)
+                //.permission(Permission.READ_MEDIA_VIDEO)
+                //.permission(Permission.READ_MEDIA_AUDIO)
+                .permission(Permission.SYSTEM_ALERT_WINDOW)
+                // 设置权限请求拦截器（局部设置）
+                //.interceptor(new PermissionInterceptor())
+                // 设置不触发错误检测机制（局部设置）
+                //.unchecked()
+                .request(new OnPermissionCallback() {
+                    @RequiresApi(api = Build.VERSION_CODES.O)
+                    @Override
+                    public void onGranted(@NonNull List<String> permissions, boolean allGranted) {
+                        if (!allGranted) {
+                            switch_float.setChecked(false);
+                            return;
+                        }
+                        _float = true;
+                        switch_float.setChecked(true);
+                        // 打开悬浮窗
+                        context.startService(new Intent(GlobalVariableHolder.context, FloatingWindow.class));
+                        // 打开悬浮窗
+                        context.startService(new Intent(GlobalVariableHolder.context, FloatingButton.class));
+                    }
+
+                    @Override
+                    public void onDenied(@NonNull List<String> permissions, boolean doNotAskAgain) {
+                        switch_float.setChecked(false);
+                        if (doNotAskAgain) {
+                            printLogMsg("被永久拒绝授权，请手动授予权限", 0);
+                            // 如果是被永久拒绝就跳转到应用权限系统设置页面
+                            XXPermissions.startPermissionActivity(context, permissions);
+                        } else {
+                            printLogMsg("获取权限失败", 0);
+                        }
+                    }
+                });
     }
+
     private void screenPermission() {
         if (ScreenCaptureManager.getInstance().isOpen()) {
             _screen = true;
@@ -229,12 +223,14 @@ public class DashboardFragment extends Fragment {
         switch_screen.setChecked(false);
         printLogMsg("屏幕录制权限未授予", 0);
     }
+
     // 开启捕获屏幕
     public void getMediaProjectionManger() {
         ScreenCaptureManager.getInstance().init(getActivity());
     }
+
     private boolean accessibilityPermission() {
-        try{
+        try {
             String packageName = context.getPackageName();
             String service = packageName + "/" + packageName + ".MyAccessibilityService";
             int enabled = Settings.Secure.getInt(GlobalVariableHolder.context.getContentResolver(), Settings.Secure.ACCESSIBILITY_ENABLED);
@@ -254,7 +250,7 @@ public class DashboardFragment extends Fragment {
                     }
                 }
             }
-        }catch (Exception ex){
+        } catch (Exception ex) {
             ex.printStackTrace();
             _accessibility = false;
             switch_accessibility.setChecked(false);
@@ -281,6 +277,7 @@ public class DashboardFragment extends Fragment {
     public static boolean _screen = false;
     @SuppressLint({"UseSwitchCompatOrMaterialCode"})
     Switch switch_dev;
+
     private void permissions(View root) {
         switch_storage = root.findViewById(R.id.switch_storage);
         switch_float = root.findViewById(R.id.switch_float);

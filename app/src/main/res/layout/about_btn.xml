@@ -11,7 +11,7 @@
     app:elevation="0dp"
     app:fabCustomSize="60dp"
     app:maxImageSize="60dp"
-    app:srcCompat="@drawable/logo5"
+    app:srcCompat="@drawable/ic_star_border_black_24dp"
     app:tint="#000000">
 
 </com.google.android.material.floatingactionbutton.FloatingActionButton>

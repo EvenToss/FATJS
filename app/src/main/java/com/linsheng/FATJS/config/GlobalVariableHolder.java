@@ -12,8 +12,8 @@ import java.util.HashMap;
 public class GlobalVariableHolder {
     public static boolean DEV_MODE = false; // FATJS 的开发者模式
     public static V8Runtime v8Runtime;
-    public static final String PATH = "/FATJS_DIR/";
-    public static final String FATJS_INFO = "\n\n\n\n\n\n\n\n\n\nauthor: 林笙\n\nwx: FATJS_Lin\n\nGitHub: FATJS";
+    public static final String PATH = "/ROBOT_SCRIPT/";
+    public static final String FATJS_INFO = "";
     public static String ANDROID_ID = "";
     public static String PHONE_NAME = "";
 
@@ -42,7 +42,7 @@ public class GlobalVariableHolder {
     public static int navigationBarHeight = -1; //导航栏的高度
     public static boolean navigationBarOpen = true; //导航栏是否开启
 
-    public static String tag = "FATJS_LOG";
+    public static String tag = "ROBOT_LOG";
     // 停顿时长
     public static final int waitHrefOfSecond  =   500;
     public static final int waitOneSecond     =   1000;
